@@ -8,6 +8,7 @@ import vertex from "./shaders/vertex.glsl";
 import t1 from "url:../img/1.png";
 import t2 from "url:../img/2.png";
 import mask from "url:../img/soul.jpg";
+import gsap from 'gsap';
 
 export default class Sketch{
     constructor(options){
@@ -56,10 +57,26 @@ export default class Sketch{
             new THREE.MeshBasicMaterial()
         )
 
-        window.addEventListener('mousewheel',(e)=>{
-            console.log(e.wheelDeltaY);
-            this.move += e.wheelDeltaY/1000;
+        window.addEventListener('mousedown',(e)=>{
+            gsap.to(this.material.uniforms.mousePressed,{
+                duration: 1,
+                value: 1,
+                ease: "elastic.out(1, 0.3)"
+            })
         })
+
+        window.addEventListener('mouseup',(e)=>{
+            gsap.to(this.material.uniforms.mousePressed,{
+                duration: 1,
+                value: 0,
+                ease: "elastic.out(1, 0.3)"       
+            })
+        })
+
+        window.addEventListener('mousewheel',(e)=>{
+            //console.log(e.wheelDeltaY);
+            this.move += e.wheelDeltaY/4000;
+        })        
 
         window.addEventListener( 'mousemove', (event)=>{
             this.mouse.x = ( event.clientX / window.innerWidth) * 2 - 1;
@@ -85,6 +102,7 @@ export default class Sketch{
                 t1: {type: "t", value: this.textures[0]},
                 t2: {type: "t", value: this.textures[1]},
                 mask: {type: "t", value: this.mask},
+                mousePressed: {type: "f", value: 0},
                 mouse: {type: "v2", value: null},
                 move: {type: "f", value: 0},
                 time: {type: "f", value: 0}
@@ -133,8 +151,12 @@ export default class Sketch{
 
     render() {
         this.time++;
+        let next = Math.floor(this.move + 40)%2;
+        let prev = (Math.floor(this.move) + 1 + 40)%2;
         //this.mesh.rotation.x += 0.01;
-        //this.mesh.rotation.y += 0.02;  
+        //this.mesh.rotation.y += 0.02;
+        this.material.uniforms.t1.value =  this.textures[prev];
+        this.material.uniforms.t2.value =  this.textures[next];  
         this.material.uniforms.time.value =  this.time;
         this.material.uniforms.move.value =  this.move;
         this.material.uniforms.mouse.value =  this.point;
