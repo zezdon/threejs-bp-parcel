@@ -32,6 +32,7 @@ export default class Sketch{
 
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
+        this.point = new THREE.Vector2();
 
         this.textures = [
             new THREE.TextureLoader().load(t1),
@@ -68,6 +69,9 @@ export default class Sketch{
 
             let intersects = this.raycaster.intersectObjects( [this.test] );
             console.log(intersects[0].point);
+
+            this.point.x = intersects[0].point.x;
+            this.point.y = intersects[0].point.y;
 
         }, false );
     }
@@ -133,7 +137,7 @@ export default class Sketch{
         //this.mesh.rotation.y += 0.02;  
         this.material.uniforms.time.value =  this.time;
         this.material.uniforms.move.value =  this.move;
-        this.material.uniforms.mouse.value =  this.mouse;
+        this.material.uniforms.mouse.value =  this.point;
         this.renderer.render( this.scene, this.camera );
         requestAnimationFrame(this.render.bind(this));
 
