@@ -5,6 +5,8 @@ import {BufferGeometryUtils} from 'three/examples/jsm/utils/BufferGeometryUtils.
 
 import fragment from "./shaders/fragment.glsl";
 import vertex from "./shaders/vertex.glsl";
+import t1 from "url:../img/1.png";
+import t2 from "url:../img/soul.jpg";
 
 export default class Sketch{
     constructor(options){
@@ -28,8 +30,8 @@ export default class Sketch{
         this.scene = new THREE.Scene();
 
         this.textures = [
-            new THREE.TextureLoader().load('http://webbsajt.com/vtest/textures/christian-cross-transparent-background.png'),
-            new THREE.TextureLoader().load('../img/soul.jpg')
+            new THREE.TextureLoader().load(t1),
+            new THREE.TextureLoader().load(t2)
         ]
         this.time = 0;
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);    
