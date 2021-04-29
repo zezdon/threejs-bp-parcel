@@ -1,7 +1,10 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {BufferGeometryUtils} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
 import fragment from "./shaders/fragment.glsl";
 import vertex from "./shaders/vertex.glsl";
-//let OrbitControls = require("three-orbit-controls")(THREE);
 
 export default class Sketch{
     constructor(options){
@@ -23,8 +26,13 @@ export default class Sketch{
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 3000 );
         this.camera.position.z = 1000;    
         this.scene = new THREE.Scene();
+
+        this.textures = [
+            new THREE.TextureLoader().load('http://webbsajt.com/vtest/textures/christian-cross-transparent-background.png'),
+            new THREE.TextureLoader().load('../img/soul.jpg')
+        ]
         this.time = 0;
-        //this.controls = new OrbitControls(this.camera, this.renderer.domElement);    
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);    
         this.addMesh();
 
         this.render();
@@ -35,7 +43,9 @@ export default class Sketch{
 			fragmentShader:fragment,
 			vertexShader:vertex,
 			uniforms:{
-				progress: {type: "f", value: 0}
+				progress: {type: "f", value: 0},
+                t1: {type: "t", value: this.textures[0]},
+                t2: {type: "t", value: this.textures[1]}
 			},
 			side: THREE.DoubleSide
 		})        
@@ -43,17 +53,19 @@ export default class Sketch{
         //this.geometry = new THREE.PlaneBufferGeometry( 1000,1000, 10, 10);
         this.geometry = new THREE.BufferGeometry( );
 		this.positions = new THREE.BufferAttribute(new Float32Array(number*3),3);
-
+        this.coordinates = new THREE.BufferAttribute(new Float32Array(number*3),3);
         let index = 0;
         for (let i = 0; i < 512; i++) {
             let posX = i - 256;
             for (let j = 0; j < 512; j++) {
                 this.positions.setXYZ(index,posX*2,(j-256)*2,0)
+                this.coordinates.setXYZ(index,i,j,0)
                 index++;
             }            
         }
 
         this.geometry.setAttribute("position", this.positions)
+        this.geometry.setAttribute("aCoordinates", this.coordinates)
         this.mesh = new THREE.Points( this.geometry, this.material );
         this.scene.add( this.mesh );        
     }
