@@ -6,7 +6,8 @@ import {BufferGeometryUtils} from 'three/examples/jsm/utils/BufferGeometryUtils.
 import fragment from "./shaders/fragment.glsl";
 import vertex from "./shaders/vertex.glsl";
 import t1 from "url:../img/1.png";
-import t2 from "url:../img/soul.jpg";
+import t2 from "url:../img/2.png";
+import mask from "url:../img/soul.jpg";
 
 export default class Sketch{
     constructor(options){
@@ -33,6 +34,7 @@ export default class Sketch{
             new THREE.TextureLoader().load(t1),
             new THREE.TextureLoader().load(t2)
         ]
+        this.mask = new THREE.TextureLoader().load(mask);
         this.time = 0;
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);    
         this.addMesh();
@@ -47,9 +49,13 @@ export default class Sketch{
 			uniforms:{
 				progress: {type: "f", value: 0},
                 t1: {type: "t", value: this.textures[0]},
-                t2: {type: "t", value: this.textures[1]}
+                t2: {type: "t", value: this.textures[1]},
+                mask: {type: "t", value: this.mask}
 			},
-			side: THREE.DoubleSide
+			side: THREE.DoubleSide,
+            transparent: true,
+            depthTest: false,
+            depthWrite: false
 		})        
         let number = 512*512;
         //this.geometry = new THREE.PlaneBufferGeometry( 1000,1000, 10, 10);
