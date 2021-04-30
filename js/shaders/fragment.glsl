@@ -10,7 +10,7 @@ void main()	{
 	vec4 tt1 = texture2D(t1,myUV);
 	vec4 tt2 = texture2D(t2,myUV);
 
-	vec4 final = mix(tt1,tt2,fract(move));
+	vec4 final = mix(tt1,tt2,smoothstep(0.,1.,fract(move)));
 
 	float alpha = 1. - clamp(0.,1.,abs(vPos.z/900.));
 	gl_FragColor = final;

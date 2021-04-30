@@ -23,11 +23,11 @@ void main() {
   // STABLE
   vec3 stable = position;
   float dist = distance(stable.xy,mouse);
-  float area = 1. - smoothstep(0.,300.,dist);
+  float area = 1. - smoothstep(0.,500.,dist);
 
-  stable.x +=50.*sin(0.1*time*aPress)*aDirection*area*mousePressed;
-  stable.y +=50.*sin(0.1*time*aPress)*aDirection*area*mousePressed;
-  stable.z +=200.*cos(0.1*time*aPress)*aDirection*area*mousePressed;
+  stable.x +=50.*sin(0.01*time*aPress)*aDirection*area*mousePressed;
+  stable.y +=50.*sin(0.01*time*aPress)*aDirection*area*mousePressed;
+  stable.z +=200.*cos(0.01*time*aPress)*aDirection*area*mousePressed;
 
   // STABLE
   vec4 mvPosition = modelViewMatrix * vec4( stable, 1. );

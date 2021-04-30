@@ -43,12 +43,25 @@ export default class Sketch{
         this.time = 0;
         this.move = 0;
         //this.controls = new OrbitControls(this.camera, this.renderer.domElement);    
+        this.resize();
         this.addMesh();
 
         this.mouseEffects();
-
+        this.setupResize();
         this.render();
     }
+
+    setupResize() {
+        window.addEventListener("resize", this.resize.bind(this));
+      }
+    
+      resize() {
+        this.width = this.container.offsetWidth;
+        this.height = this.container.offsetHeight;
+        this.renderer.setSize(this.width, this.height);
+        this.camera.aspect = this.width / this.height;
+        this.camera.updateProjectionMatrix();
+      }
 
     mouseEffects() {
 
@@ -104,6 +117,7 @@ export default class Sketch{
                 mask: {type: "t", value: this.mask},
                 mousePressed: {type: "f", value: 0},
                 mouse: {type: "v2", value: null},
+                transition: {type: "f", value: null},
                 move: {type: "f", value: 0},
                 time: {type: "f", value: 0}
 			},
@@ -156,7 +170,8 @@ export default class Sketch{
         //this.mesh.rotation.x += 0.01;
         //this.mesh.rotation.y += 0.02;
         this.material.uniforms.t1.value =  this.textures[prev];
-        this.material.uniforms.t2.value =  this.textures[next];  
+        this.material.uniforms.t2.value =  this.textures[next];
+        
         this.material.uniforms.time.value =  this.time;
         this.material.uniforms.move.value =  this.move;
         this.material.uniforms.mouse.value =  this.point;
